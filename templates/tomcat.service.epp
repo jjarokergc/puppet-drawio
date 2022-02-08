@@ -1,0 +1,48 @@
+<%- | String $instance_name,
+      String $catalina_home,
+      String $catalina_base,
+      String $tomcat_temp_dir,
+      String $java_home,
+      String $class_path,
+| -%>
+[Unit]
+Description=Apache Tomcat - Instance <%= $instance_name %>
+After=syslog.target network.target
+
+[Service]
+# Name of the executable show in logs
+SyslogIdentifier=Tomcat-<%= $instance_name %>
+
+User=tomcat
+Group=tomcat
+UMask=0007
+
+Environment="CLASSPATH=<%= $class_path %>"
+Environment="CATALINA_HOME=<%= $catalina_home %>"
+Environment="CATALINA_BASE=<%= $catalina_base %>"
+Environment="CATALINA_TMPDIR=<%= $tomcat_temp_dir %>"
+Environment="JAVA_HOME=<%= $java_home %>"
+
+Environment="JAVA_OPTS=-Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom -Dignore.endorsed.dirs='' -Djava.protocol.handler.pkgs=org.apache.catalina.webresources -Djdk.tls.ephemeralDHKeySize=2048 --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.util.concurrent=ALL-UNNAMED --add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED"
+Environment="CATALINA_OPTS=-Dorg.apache.catalina.security.SecurityListener.UMASK=0027"
+
+ExecStart=/usr/bin/env ${JAVA_HOME}/bin/java ${JAVA_OPTS} ${CATALINA_OPTS} \
+-classpath ${CLASSPATH} \
+-Dcatalina.base=${CATALINA_BASE} \
+-Dcatalina.home=${CATALINA_HOME} \
+-Djava.io.tmpdir=${CATALINA_TMPDIR} \
+-Djava.util.logging.config.file=${CATALINA_BASE}/conf/logging.properties \
+-Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager \
+org.apache.catalina.startup.Bootstrap start
+
+ExecStop=/usr/bin/env ${JAVA_HOME}/bin/java ${JAVA_OPTS}\
+-classpath ${CLASSPATH} \
+-Dcatalina.base=${CATALINA_BASE} \
+-Dcatalina.home=${CATALINA_HOME} \
+-Djava.io.tmpdir=${CATALINA_TMPDIR} \
+-Djava.util.logging.config.file=${CATALINA_BASE}/conf/logging.properties \
+-Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager \
+org.apache.catalina.startup.Bootstrap stop
+
+[Install]
+WantedBy=multi-user.target
