@@ -1,10 +1,10 @@
 # Puppet Module for diagrams.net (drawio)
 
+This puppet module installs the drawio WAR file into a Tomcat instance and creates a systemd unit file for management of the application.  It was developed for Debian-family operating systems.
+
 The development repository is located at: <https://gitlab.jaroker.org>.  A mirror repository is pushed to: <https://github.com/jjarokergc/puppet-drawio> for public access.
 
 ## Architecture
-
-This module install the drawio WAR file into a Tomcat instance and creates a systemd unit file for management of the application.  It was developed for Debian-family operating systems.
 
 The module depends on `puppetlabs-java` and `puppetlabs-tomcat` modules but implements its own systemd-based management of the tomcat instance which bypasses the Tomcat scripts (e.g. catalina.sh) in favor of directly running Tomcat in Java.
 
@@ -29,7 +29,7 @@ mod 'puppetlabs-java', '7.3.0'
 
 ## Usage Example
 
-Server is assigned a profile in `site/role/oss/draw_server.pp`
+An example profile such as `site/role/oss/draw_server.pp` below can be used to configure a server.  The `drawio::install` module is located in the manifests directory. 
 
 ``` puppet
 # Drawio Server
@@ -74,6 +74,21 @@ drawio::install:
     name: 'draw'        # Subdirectory name
     base: '/var/tomcat' # Server instance location
     max_threads: '400'  # Thread size 
+```
+
+data/Debian-family.yaml
+```yaml
+# Draio Module-level defaults
+---
+# Data Merging Options
+# (Over-ride these defaults by using an environment-specific data file)
+lookup_options:
+  drawio::provisioning:
+    merge: hash
+
+# OS Specific Provisioning
+drawio::provisioning:
+  systemd_dir: '/etc/systemd/system'
 ```
 
 ## Reverse Proxy
