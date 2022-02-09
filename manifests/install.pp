@@ -12,13 +12,14 @@ class drawio::install{
   $tomcat_version = $dw['tomcat']['version']  # Upgrade tomcat by changing version and url variables
   $tomcat_download_url= $dw['tomcat']['download_url']
   $tomcat_server_port=$dw['tomcat']['server_port']
+  $tomcat_temp_dir=$dw['tomcat']['temp_dir']
   # Drawio
   $drawio_download_url=$dw['drawio']['download_url']
   # Tomcat Instance
   $instance_name = $dw['instance']['name']      # Subdirectory name
   $instance_base = $dw['instance']['base']    # Server instance location
   $instance_max_threads = $dw['instance']['max_threads']   # Thread size 
-  $instance_temp_dir=$dw['instance']['temp_dir']
+  $instance_temp_dir="${tomcat_temp_dir}/${instance_name}"
   # systemd unit file
   $systemd_dir=$pr['systemd_dir']
   $service_name="${instance_name}.service"
@@ -38,6 +39,7 @@ class drawio::install{
   file{ [
           $tomcat_base,
           $instance_base,
+          $tomcat_temp_dir,
           $instance_temp_dir,
         ]:
     ensure => directory,

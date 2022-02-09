@@ -12,10 +12,10 @@ drawio::install:
     version: '10.0.16'  # Upgrade tomcat by changing version and url variables
     download_url: 'https://dlcdn.apache.org/tomcat/tomcat-10/v10.0.16/bin/apache-tomcat-10.0.16.tar.gz'
     server_port: '8100'
+    temp_dir: '/tmp/tomcat'
   drawio:
     download_url: "https://github.com/jgraph/drawio/releases/download/v16.5.3/draw.war"
   instance:
     name: 'draw'        # Subdirectory name
     base: '/var/tomcat' # Server instance location
     max_threads: '400'  # Thread size 
-    temp_dir: '/tmp/tomcat/draw'
