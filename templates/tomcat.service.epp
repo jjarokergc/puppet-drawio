@@ -1,7 +1,7 @@
 <%- | String $instance_name,
       String $catalina_home,
       String $catalina_base,
-      String $tomcat_temp_dir,
+      String $instance_temp_dir,
       String $java_home,
       String $class_path,
 | -%>
@@ -20,7 +20,7 @@ UMask=0007
 Environment="CLASSPATH=<%= $class_path %>"
 Environment="CATALINA_HOME=<%= $catalina_home %>"
 Environment="CATALINA_BASE=<%= $catalina_base %>"
-Environment="CATALINA_TMPDIR=<%= $tomcat_temp_dir %>"
+Environment="CATALINA_TMPDIR=<%= $instance_temp_dir %>"
 Environment="JAVA_HOME=<%= $java_home %>"
 
 Environment="JAVA_OPTS=-Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom -Dignore.endorsed.dirs='' -Djava.protocol.handler.pkgs=org.apache.catalina.webresources -Djdk.tls.ephemeralDHKeySize=2048 --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.util.concurrent=ALL-UNNAMED --add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED"
