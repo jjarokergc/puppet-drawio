@@ -19,12 +19,3 @@ drawio::install:
     base: '/var/tomcat' # Server instance location
     max_threads: '400'  # Thread size 
     temp_dir: '/tmp/tomcat/draw'
-
-  $systemd_dir='/etc/systemd/system'
-  $service_name="${instance_name}.service"
-  $unit_filename = "${systemd_dir}/${service_name}"
-
-  # Nginx Reverse Proxy
-  $nx_proxy = lookup('nginx::reverse_proxy')
-  $instance_listen_port = $nx_proxy['proxy']['forward_port']
-
