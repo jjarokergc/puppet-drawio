@@ -2,4 +2,29 @@
 ---
 # Data Merging Options
 # (Over-ride these defaults by using an environment-specific data file)
-{}}
+lookup_options:
+  drawio::install:
+    merge: hash
+
+drawio::install:
+  tomcat: 
+    base: '/opt/tomcat' # Location of binaries
+    version: '10.0.16'  # Upgrade tomcat by changing version and url variables
+    download_url: 'https://dlcdn.apache.org/tomcat/tomcat-10/v10.0.16/bin/apache-tomcat-10.0.16.tar.gz'
+    server_port: '8100'
+  drawio:
+    download_url: "https://github.com/jgraph/drawio/releases/download/v16.5.3/draw.war"
+  instance:
+    name: 'draw'        # Subdirectory name
+    base: '/var/tomcat' # Server instance location
+    max_threads: '400'  # Thread size 
+    temp_dir: '/tmp/tomcat/draw'
+
+  $systemd_dir='/etc/systemd/system'
+  $service_name="${instance_name}.service"
+  $unit_filename = "${systemd_dir}/${service_name}"
+
+  # Nginx Reverse Proxy
+  $nx_proxy = lookup('nginx::reverse_proxy')
+  $instance_listen_port = $nx_proxy['proxy']['forward_port']
+

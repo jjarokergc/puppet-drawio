@@ -3,49 +3,52 @@
 class drawio::install{
 
   # VARIABLES
-  $tomcat_base = '/opt/tomcat' # Location of binaries
-  $tomcat_version = '10.0.16'  # Upgrade tomcat by changing version and url variables
-  $tomcat_download_url='https://dlcdn.apache.org/tomcat/tomcat-10/v10.0.16/bin/apache-tomcat-10.0.16.tar.gz'
+  # Data Lookups
+  $dw=lookup('drawio::install')             # Hiera data for installation
+  $pr=lookup('drawio::provisioning')        # OS-specific variables
+  $nx_proxy=lookup('nginx::reverse_proxy')  # Reverse proxy variables
+  # Tomcat
+  $tomcat_base = $dw['tomcat']['base'] # Location of binaries
+  $tomcat_version = $dw['tomcat']['version']  # Upgrade tomcat by changing version and url variables
+  $tomcat_download_url= $dw['tomcat']['download_url']
+  $tomcat_server_port=$dw['tomcat']['server_port']
+  # Drawio
+  $drawio_download_url=$dw['drawio']['download_url']
+  # Tomcat Instance
+  $instance_name = $dw['instance']['name']      # Subdirectory name
+  $instance_base = $dw['instance']['base']    # Server instance location
+  $instance_max_threads = $dw['instance']['max_threads']   # Thread size 
+  $instance_temp_dir=$dw['instance']['temp_dir']
+  # systemd unit file
+  $systemd_dir=$pr['systemd_dir']
+  $service_name="${instance_name}.service"
+  $unit_filename = "${systemd_dir}/${service_name}"
+  # Nginx Reverse Proxy
+  $instance_listen_port = $nx_proxy['proxy']['forward_port']
 
-  $drawio_version = 'v16.5.3'
-  $drawio_download_url="https://github.com/jgraph/drawio/releases/download/${drawio_version}/draw.war"
-
-  $instance_name = 'draw'       # Subdirectory name
-  $instance_base = '/var/tomcat'  # Server instance location
-  $instance_max_threads = '400'   # Thread size 
-
+  # Derived Values
   $catalina_home = "${tomcat_base}/${tomcat_version}"  # Tomcat binaries
   $catalina_base = "${instance_base}/${instance_name}"   # Instance
   $class_path = "${catalina_home}/bin/bootstrap.jar:${catalina_home}/bin/tomcat-juli.jar"
 
-  $tomcat_temp_dir='/tmp/tomcat'
-
-  $systemd_dir='/etc/systemd/system'
-  $service_name="${instance_name}.service"
-  $unit_filename = "${systemd_dir}/${service_name}"
-
-  # Nginx Reverse Proxy
-  $nx_proxy = lookup('nginx::reverse_proxy')
-  $instance_listen_port = $nx_proxy['proxy']['forward_port']
-
-
+  # Using Tomcat and Java Packages
   class { '::tomcat': }
   class { '::java':   }
-
+  # Prepare Sub Directories
   file{ [
           $tomcat_base,
           $instance_base,
-          $tomcat_temp_dir,
+          $instance_temp_dir,
         ]:
     ensure => directory,
-    owner  => 'tomcat',
-    group  => 'tomcat',
+    owner  => $::tomcat::user,
+    group  => $::tomcat::group,
   }
-
+  # Install Tomcat
   tomcat::install { $catalina_home:
     source_url => $tomcat_download_url,
   }
-
+  # Drawio is run as an instance
   tomcat::instance { $instance_name:
     catalina_home  => $catalina_home,
     catalina_base  => $catalina_base,
@@ -53,27 +56,28 @@ class drawio::install{
     use_init       => false,
     manage_service => false,
   }
-
   # Service.xml Configuration
-  # Change the default port of the second instance server and HTTP connector
-  tomcat::config::server { $instance_name:
-    catalina_base => $catalina_base,
-    port          => '8100',
+  if $tomcat_server_port { # Change management port, if new one specified
+    tomcat::config::server { $instance_name:
+      catalina_base => $catalina_base,
+      port          => $tomcat_server_port,
+    }
   }
-  tomcat::config::server::connector { "${instance_name}-http":
-    catalina_base         => $catalina_base,
-    port                  => $instance_listen_port,
-    protocol              => 'HTTP/1.1',
-    additional_attributes => {
-      'maxThreads'          => $instance_max_threads,
-    },
-  }
-  # Remove default port
-  tomcat::config::server::connector { 'port-8080':
-    connector_ensure => 'absent',
-    catalina_base    => $catalina_base,
-    port             => '8080',
-    protocol         => 'HTTP/1.1',
+  if ($instance_listen_port) and ($instance_listen_port != '8080') {
+    tomcat::config::server::connector { 'port-8080': # Remove default port if not used
+      connector_ensure => 'absent',
+      catalina_base    => $catalina_base,
+      port             => '8080',
+      protocol         => 'HTTP/1.1',
+    }
+    tomcat::config::server::connector { "${instance_name}-http": # Install new port
+      catalina_base         => $catalina_base,
+      port                  => $instance_listen_port,
+      protocol              => 'HTTP/1.1',
+      additional_attributes => {
+        'maxThreads'          => $instance_max_threads,
+      },
+    }
   }
   # Set webapp context to root
   tomcat::config::server::context {$instance_name:
@@ -96,12 +100,12 @@ class drawio::install{
     mode    => '0777',
     content => epp('drawio/tomcat.service.epp',
         {
-          'instance_name'   => $instance_name,
-          'catalina_home'   => $catalina_home,
-          'catalina_base'   => $catalina_base,
-          'tomcat_temp_dir' => $tomcat_temp_dir,
-          'java_home'       => $::java::use_java_home,
-          'class_path'      => $class_path
+          'instance_name'     => $instance_name,
+          'catalina_home'     => $catalina_home,
+          'catalina_base'     => $catalina_base,
+          'instance_temp_dir' => $instance_temp_dir,
+          'java_home'         => $::java::use_java_home,
+          'class_path'        => $class_path
         }
       ),
     notify  => Exec['systemctl daemon-reload'],

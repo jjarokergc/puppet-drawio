@@ -1,0 +1,11 @@
+# Draio Module-level defaults
+---
+# Data Merging Options
+# (Over-ride these defaults by using an environment-specific data file)
+lookup_options:
+  drawio::provisioning:
+    merge: hash
+
+# OS Specific Provisioning
+drawio::provisioning:
+  systemd_dir: '/etc/systemd/system'
