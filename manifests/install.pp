@@ -6,7 +6,7 @@ class drawio::install{
   # Data Lookups
   $dw=lookup('drawio::install')             # Hiera data for installation
   $pr=lookup('drawio::provisioning')        # OS-specific variables
-  $nx_proxy=lookup('nginx::reverse_proxy')  # Reverse proxy variables
+  $nx=lookup('nginx::reverse_proxy')        # Reverse proxy variables
   # Tomcat
   $tomcat_base = $dw['tomcat']['base'] # Location of binaries
   $tomcat_version = $dw['tomcat']['version']  # Upgrade tomcat by changing version and url variables
@@ -25,7 +25,7 @@ class drawio::install{
   $service_name="${instance_name}.service"
   $unit_filename = "${systemd_dir}/${service_name}"
   # Nginx Reverse Proxy
-  $instance_listen_port = $nx_proxy['proxy']['forward_port']
+  $instance_listen_port = $nx['proxy']['forward_port']
 
   # Derived Values
   $catalina_home = "${tomcat_base}/${tomcat_version}"  # Tomcat binaries
