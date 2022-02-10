@@ -99,7 +99,7 @@ class drawio::install{
     ensure  => file,
     owner   => 'root',
     group   => 'root',
-    mode    => '0777',
+    mode    => '0640',
     content => epp('drawio/tomcat.service.epp',
         {
           'instance_name'     => $instance_name,
