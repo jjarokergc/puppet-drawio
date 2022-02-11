@@ -1,0 +1,79 @@
+<%- | Hash $cf,
+      String $drawio_base_url,
+      String $drawio_viewer_url,
+      String $drawio_lightbox_url,
+| -%>
+/**
+* File Managed by Puppet
+*
+* Drawio Pre-Configuration File
+* 
+*/
+
+// Add CSP to prevent calls to draw.io
+(function() {
+  try {
+	    var s = document.createElement('meta');
+	    s.setAttribute('content', '<%= $cf['csp_header'] %>');
+	    s.setAttribute('http-equiv', 'Content-Security-Policy');
+ 	    var t = document.getElementsByTagName('meta')[0];
+      t.parentNode.insertBefore(s, t);
+  } catch (e) {} // ignore
+})();
+// Overrides of global vars need to be pre-loaded
+  window.EXPORT_URL = '<%= $cf['export_url'] %>';
+  window.PLANT_URL = '<%= $cf['plantuml_url'] %>';
+// DRAWIO_BASE_URL is path to base of deployment, e.g. https://www.example.com/folder
+  window.DRAWIO_BASE_URL = '<%= $drawio_base_url %>';
+// DRAWIO_VIEWER_URL is path to the viewer js, e.g. https://www.example.com/js/viewer.min.js
+  window.DRAWIO_VIEWER_URL = '<%= $drawio_viewer_url %>';
+  window.DRAWIO_LIGHTBOX_URL = '<%= $drawio_lightbox_url %>';
+  window.DRAW_MATH_URL = '<%= $cf['math_url'] %>';
+// Custom draw.io configurations. For more details, https://desk.draw.io/support/solutions/articles/16000058316
+  window.DRAWIO_CONFIG = '<%= $cf['editor_config'] %>';
+// Real-time configuration
+<% if $cf['iot']['endpoint'] != '' { -%>
+  urlParams['sync'] = 'auto'; //Enable Real-Time
+  window.MXPUSHER_IOT_ENDPOINNT = '<%= $cf['iot']['mxpusher_endpoint'] %>'; //Specifies the IoT endpoint
+  window.DRAWIO_PUSHER_MODE = <%= $cf['iot']['pusher_mode'] %>;
+<% } else { -%>
+  urlParams['sync'] = 'manual'; //Disable Real-Time
+<% } -%>
+
+// Disable unsupported services
+  urlParams['db'] = '0'; //dropbox
+  urlParams['gh'] = '0'; //github
+  urlParams['tr'] = '0'; //trello
+
+// Google Drive 
+<% if $cf['google']['client_id'] == '' { -%>
+  urlParams['gapi'] = '0'; //Google Drive 
+<% } else { -%>
+  // Google drive application id and client id for the editor
+  window.DRAWIO_GOOGLE_APP_ID = '<%= $cf['google']['app_id'] %>'; 
+  window.DRAWIO_GOOGLE_CLIENT_ID = '<%= $cf['google']['client_id'] %>'; 
+  // If you want to use the editor as a viewer also, you can create another app with read-only access. You can use the same info as above if write-access is not an issue. 
+    <% if $cf['google']['viewer']['client_id'] != '' { -%>
+  window.DRAWIO_GOOGLE_VIEWER_APP_ID = '<%= $cf['google']['viewer']['app_id']%>'; 
+  window.DRAWIO_GOOGLE_VIEWER_CLIENT_ID = '<%= $cf['google']['viewer']['client_id'] %>'; 
+    <% } -%>
+<% } -%>
+
+// Microsoft OneDrive
+<% if $cf['msgraph']['client_id'] == '' { -%>
+  urlParams['od'] = '0'; //OneDrive 
+<% } else { -%>
+  // Google drive application id and client id for the editor
+  window.DRAWIO_MSGRAPH_CLIENT_ID = '<%= $cf['msgraph']['client_id'] %>'; 
+<% } -%>
+
+
+// Gitlab
+<% if $cf['gitlab']['id'] == '' { -%>
+  urlParams['gl'] = '0'; //Gitlab
+<% } else { -%>
+  // Gitlab url and id for the editor
+  window.DRAWIO_GITLAB_URL = '<%= $cf['gitlab']['url'] %>'; 
+  window.DRAWIO_GITLAB_ID = '<%= $cf['gitlab']['id'] %>'; 
+<% } -%>
+

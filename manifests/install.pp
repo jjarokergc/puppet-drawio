@@ -1,5 +1,13 @@
 # Install and Configure Diagrams.Net drawio
 #
+#   Parameters defined in yaml data file
+#   Installs Tomcat and Java
+#   Creates DrawIO instance on non-privileged port
+#   Creates custom systemd unit file
+#   Manages drawio as systemd service
+#
+#   Expects to work behind an Nginx reverse proxy with SSL offloading and WAF
+#
 class drawio::install{
 
   # VARIABLES
@@ -16,7 +24,7 @@ class drawio::install{
   # Drawio
   $drawio_download_url=$dw['drawio']['download_url']
   # Tomcat Instance
-  $instance_name = $dw['instance']['name']      # Subdirectory name
+  $instance_name = $dw['instance']['name']    # Subdirectory name
   $instance_base = $dw['instance']['base']    # Server instance location
   $instance_max_threads = $dw['instance']['max_threads']   # Thread size 
   $instance_temp_dir="${tomcat_temp_dir}/${instance_name}"
@@ -54,6 +62,7 @@ class drawio::install{
   tomcat::instance { $instance_name:
     catalina_home  => $catalina_home,
     catalina_base  => $catalina_base,
+    # Custom systemd unit file is used instead of puppetlabs-tomcat module implementation
     use_jsvc       => false,
     use_init       => false,
     manage_service => false,
@@ -65,6 +74,7 @@ class drawio::install{
       port          => $tomcat_server_port,
     }
   }
+  # Custom listen port
   if ($instance_listen_port) and ($instance_listen_port != '8080') {
     tomcat::config::server::connector { 'port-8080': # Remove default port if not used
       connector_ensure => 'absent',
@@ -81,16 +91,14 @@ class drawio::install{
       },
     }
   }
-  # Set webapp context to root
+  # Set webapp context to root.  Tomcat will answer http://draw.example.co (not http://example.com/draw)
   tomcat::config::server::context {$instance_name:
     catalina_base         => $catalina_base,
     context_ensure        => 'present',
     parent_service        => 'Catalina',
     parent_engine         => 'Catalina',
     parent_host           => 'localhost',
-    additional_attributes => {
-                      path=>''  #Tomcat warning: either empty or start with '/' and not end with '/'
-                      },
+    additional_attributes => { path=>'' },
     require               => Tomcat::Instance[$instance_name],
   }
 
@@ -127,7 +135,6 @@ class drawio::install{
         File[$unit_filename],                             # Unit file is installed
           ],
   }
-
 
   # Install Drawio Package
   tomcat::war { "${instance_name}.war":

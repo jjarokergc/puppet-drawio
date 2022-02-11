@@ -1,0 +1,29 @@
+<%- | Hash $cf,
+| -%>
+/**
+* File Managed by Puppet
+*
+* Drawio Post-Configuration File
+* 
+*/
+
+// nulling of global vars need to be after init.js
+    window.VSD_CONVERT_URL = null;
+    window.ICONSEARCH_PATH = null;
+
+// Logging
+    EditorUi.enableLogging = <%= $cf['logging'] %>; 
+
+// This requires subscription with cloudconvert.com
+<% if $cf['cloud_convert_apikey'] == '' { -%>
+    window.EMF_CONVERT_URL = null;
+<% } else { -%>
+    window.EMF_CONVERT_URL = '/convert';
+<% } %>
+
+<% if $cf['plantuml_url'] != '' { -%>
+    EditorUi.enablePlantUml = true; //Enables PlantUML
+<% } -%>
+
+// Treat this domain as a draw.io domain
+    App.prototype.isDriveDomain = function() { return true; }

@@ -1,6 +1,6 @@
 # Puppet Module for diagrams.net (drawio)
 
-This puppet module installs the drawio WAR file into a Tomcat instance and creates a systemd unit file for management of the application.  It was developed for Debian-family operating systems.
+This puppet module installs drawio as a Tomcat instance and creates a systemd unit file for management of the application.  It was developed for Debian-family operating systems.
 
 The development repository is located at: <https://gitlab.jaroker.org>.  A mirror repository is pushed to: <https://github.com/jjarokergc/puppet-drawio> for public access.
 
@@ -10,7 +10,7 @@ The module depends on `puppetlabs-java` and `puppetlabs-tomcat` modules but impl
 
 SSL offloading, caching and security (such as ModSecurity firewall) is provided by an Nginx reverse proxy (which is not part of this module).  This module implements only the proxied server.
 
-The puppet module uses hiera for data lookup, which specifies source location (and version) for downloading, database configuration, nginx configuration and php setup.
+A yaml data file, in the form of Puppet hiera, is used for data lookup, which specifies source location (and version) for downloading, database configuration, nginx configuration and php setup.
 
  Tested Configuration
 
@@ -34,16 +34,16 @@ An example profile such as `site/role/oss/draw_server.pp` below can be used to c
 ``` puppet
 # Drawio Server
 #
-class role::oss::draw_server{
-  include profile::base_configuration       # Setup server with user accounts, etc.
+class role::app::draw_server{
+  include profile::base_configuration
 
   # Diagrams.Net drawio utility
-  include drawio::install                   # Install drawio instance running Tomcat
-  
-  # Reverse Proxy Web Access via SSL
-  include profile::nginx::reverse_proxy_export # Not part of this module.  Creates nginx reverse proxy.
+  include drawio::install   # Creates drawio instance
+  include drawio::config    # Installs pre- and post-config files and integrations
 
-}
+  # Publicly available behind a reverse proxy
+  include profile::nginx::reverse_proxy_export
+
 }
 ```
 
@@ -150,7 +150,7 @@ server {
   location / {
     modsecurity on;
     modsecurity_rules_file /etc/nginx/modsec/main.conf;
-    proxy_pass            http://10.10.10.99:8000;
+    proxy_pass            http://10.10.10.99:8000;  <<< REQUEST URI?>>>
     proxy_read_timeout    300;
     proxy_connect_timeout 300;
     proxy_send_timeout    90s;

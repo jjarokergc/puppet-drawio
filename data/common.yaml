@@ -7,6 +7,27 @@ lookup_options:
   drawio::install:
     merge: hash
 
+nginx::reverse_proxy:
+  server:
+    name: 'draw.jaroker.org'
+    fqdn: ['draw.jaroker.org']        # server name directive
+    client_max_body_size: '1'        # allowed size of uploaded files
+    ssl: true                       # Enable ssl cert 
+    ssl_redirect: true              # Redirect http: to https: by default
+  location:
+    modsecurity:
+      on_off: 'on'                    # 'on' or 'off' to enable modsecurity in ngnix
+      config_filename: "main.conf"  # configuration file must exist in /etc/nginx/modsec
+  proxy:
+    read_timeout: '300'
+    connect_timeout: '300'
+    redirect: 'off'
+    cache: 'cache_0'
+    set_header: ['X-Forwarded-Ssl on']
+    buffering: 'off'
+    http_version: '1.1'
+    forward_port: '8000'  # Tomcat instance listen port for drawio
+
 drawio::install:
   tomcat: 
     base: '/opt/tomcat' # Location of binaries
@@ -20,3 +41,43 @@ drawio::install:
     name: 'draw'        # Subdirectory name
     base: '/var/tomcat' # Server instance location
     max_threads: '400'  # Thread size 
+
+drawio::configure:
+  plantuml_url: '' # Disabled if ''.  Example, 'http://plantuml-server:8080/'
+  export_url: '/export'  # Image Server Example, http://image-export:8000/
+  math_url: 'math'
+  csp_header: "default-src 'self'; script-src 'self' https://storage.googleapis.com https://apis.google.com https://docs.google.com https://code.jquery.com 'unsafe-inline'; connect-src 'self' https://*.dropboxapi.com https://api.trello.com https://api.github.com https://raw.githubusercontent.com https://*.googleapis.com https://*.googleusercontent.com https://graph.microsoft.com https://*.1drv.com https://*.sharepoint.com https://gitlab.com https://*.google.com https://fonts.gstatic.com https://fonts.googleapis.com; img-src * data:; media-src * data:; font-src * about:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;"
+  viewer: # Either full 'url' if not empty; or, 'path' from drawio base url
+    url:  ''                 # Optional.  Either empty or https://example.com. Base_url used if empty.
+    path: 'js/viewer.min.js' # Location inside url for viewer file
+  lightbox: # Either full 'url' if not empty; or, 'path' from drawio base url
+    url:  ''                 # Optional.  Either empty or https://example.com. Base_url used if empty.
+    path: 'js/viewer.min.js' # Location inside url for viewer file
+  editor_config: ''  # Parameter DRAWIO_CONFIG
+  google: # Google drive application id and client id for the editor
+    client_id: ''
+    app_id:
+    client_secret:
+    viewer:
+      client_id: ''
+      app_id:
+      client_secret:
+  msgraph:
+    client_id: ''
+    client_secret:
+  gitlab:
+    id: '7a669cfe360605c6f0695a962714362ae29d13ab8248d15bffbc8cb079cc740e'
+    url: 'https://gitlab.jaroker.org/oauth/token' # Gitlab Auth URL
+    secret: 'a4edaa2b849522dd45ba3dfe373efda07ec0c1090e64dff4e708c38fdcd0ab06'
+  cloud_convert_apikey: ''
+  iot:
+    endpoint: '' # Either null or URL for endpoint
+    cert_pem: 
+    private_key:
+    root_ca: 
+    mxpusher_endpoint:
+    pusher_mode: 2
+  logging: 'true'
+#TODO - endpoint cache and real-time collaboration
+# - drawio_cache_domain=${drawio_cache_domain}
+# - DRAWIO_MEMCACHED_ENDPOINT=${DRAWIO_MEMCACHED_ENDPOINT}
