@@ -49,7 +49,7 @@ class drawio::config {
         }
       ),
     notify  => Service[$service_name],
-    require => File[$instance_name],        # Create file after WAR downloaded
+    require => File[$instance_dir],        # Create file after WAR downloaded
   }
   file {$drawio_postconfig_file:
     ensure  => file,
@@ -62,7 +62,7 @@ class drawio::config {
         }
       ),
     notify  => Service[$service_name],
-    require => File[$instance_name],        # Create file after WAR downloaded
+    require => File[$instance_dir],        # Create file after WAR downloaded
   }
 
   # Drawio IOT Endpoint Configuration
@@ -72,7 +72,7 @@ class drawio::config {
       ensure  => directory,
       owner   => $::tomcat::user,
       group   => $::tomcat::group,
-      require => File[$instance_name],        # Create file after WAR downloaded
+      require => File[$instance_dir,        # Create file after WAR downloaded
     }
     file { "${aws_iot_dir}/mxPusherSrv.cert.pem":
       content => $cf['iot']['cert_pem'],
@@ -112,13 +112,13 @@ class drawio::config {
       content => $content_id,
       owner   => $::tomcat::user,
       group   => $::tomcat::group,
-      require => File[$instance_name],        # Create file after WAR downloaded
+      require => File[$instance_dir],        # Create file after WAR downloaded
     }
     file { "${web_inf_dir}/google_client_secret":
       content => $content_secret,
       owner   => $::tomcat::user,
       group   => $::tomcat::group,
-      require => File[$instance_name],        # Create file after WAR downloaded
+      require => File[$instance_dir],        # Create file after WAR downloaded
     }
   }
 
@@ -129,13 +129,13 @@ class drawio::config {
       content => $cf['msgraph']['client_id'],
       owner   => $::tomcat::user,
       group   => $::tomcat::group,
-      require => File[$instance_name],        # Create file after WAR downloaded
+      require => File[$instance_dir],        # Create file after WAR downloaded
     }
     file { "${web_inf_dir}/msgraph_client_secret":
       content => $cf['msgraph']['client_secret'],
       owner   => $::tomcat::user,
       group   => $::tomcat::group,
-      require => File[$instance_name],        # Create file after WAR downloaded
+      require => File[$instance_dir],        # Create file after WAR downloaded
     }
   }
 
@@ -146,19 +146,19 @@ class drawio::config {
       content => $cf['gitlab']['url'],
       owner   => $::tomcat::user,
       group   => $::tomcat::group,
-      require => File[$instance_name],        # Create file after WAR downloaded
+      require => File[$instance_dir],        # Create file after WAR downloaded
     }
     file { "${web_inf_dir}/gitlab_client_id":
       content => $cf['gitlab']['id'],
       owner   => $::tomcat::user,
       group   => $::tomcat::group,
-      require => File[$instance_name],        # Create file after WAR downloaded
+      require => File[$instance_dir],        # Create file after WAR downloaded
     }
     file { "${web_inf_dir}/gitlab_client_secret":
       content => $cf['gitlab']['secret'],
       owner   => $::tomcat::user,
       group   => $::tomcat::group,
-      require => File[$instance_name],        # Create file after WAR downloaded
+      require => File[$instance_dir],        # Create file after WAR downloaded
     }
   }
 
@@ -168,7 +168,7 @@ class drawio::config {
       content => $cf['cloud_convert_apikey'],
       owner   => $::tomcat::user,
       group   => $::tomcat::group,
-      require => File[$instance_name],        # Create file after WAR downloaded
+      require => File[$instance_dir],        # Create file after WAR downloaded
     }
   }
 
