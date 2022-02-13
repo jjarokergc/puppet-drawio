@@ -150,16 +150,27 @@ class drawio::install{
   # Download and extract drawio
   include archive
   package {'unzip': ensure => installed, }
+  # Download war file to downloads directory
   archive { $instance_name:
     path    => "${instance_download_dir}/${instance_name}-${drawio_version}.war",
     source  => $drawio_download_url,
     extract => false,
     require => File['drawio-download'],
   }
-    # extract_path => "${instance_download_dir}/${drawio_version}",
-    # creates      => "${instance_download_dir}/${drawio_version}/index.html",
-    # cleanup      => true, # remove archive file after extraction
-    # user         => $::tomcat::user,
-    # group        => $::tomcat::group,
-
+  # Extract to directory that matches version number
+  exec {'extract drawio':
+    command => [ 'unzip', '-d', $drawio_version, "${instance_name}-${drawio_version}.war" ],
+    path    => ['/usr/bin', '/usr/sbin',],
+    cwd     => $instance_download_dir,
+    creates => "${instance_download_dir}/${drawio_version}/index.html",
+    user    => $::tomcat::user,
+    group   => $::tomcat::group,
+    require => Archive[$instance_name],
+  }
+  # Deploy 'draw' application by linking to versioned directory
+  file {$instance_dir:
+    ensure  => link,
+    target  => "${instance_download_dir}/${drawio_version}",
+    require => Exec['extract drawio'],
+  }
 }
