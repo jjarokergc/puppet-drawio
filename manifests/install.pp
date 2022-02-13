@@ -151,9 +151,10 @@ class drawio::install{
 
   archive { $instance_name:
     ensure       => present,
+    path         => "${instance_download_dir}/${instance_name}-${drawio_version}.war",
     source       => $drawio_download_url,
     extract      => true,
-    extract_path => "${instance_download_dir}/${drawio_version}", # Target folder path to extract archive
+    extract_path => $instance_download_dir, # Target folder path to extract archive
     creates      => "${instance_download_dir}/${drawio_version}",
     cleanup      => true, # remove archive file after extraction
     user         => $::tomcat::user,
