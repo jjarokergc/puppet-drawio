@@ -39,6 +39,8 @@ class drawio::install{
   # Derived Values
   $catalina_home = "${tomcat_base}/${tomcat_version}"  # Tomcat binaries
   $catalina_base = "${instance_base}/${instance_name}"   # Instance directory, example '/var/tomcat/draw'
+  $instance_dir = "${catalina_base}/webapps/${dw['instance']['name']}" # '/var/tomcat/draw/webapps/draw'
+  $instance_download_dir = "${catalina_base}/download"    # /var/tomcat/draw/download
   $class_path = "${catalina_home}/bin/bootstrap.jar:${catalina_home}/bin/tomcat-juli.jar"
 
   # Using Tomcat and Java Packages
@@ -54,6 +56,14 @@ class drawio::install{
     ensure => directory,
     owner  => $::tomcat::user,
     group  => $::tomcat::group,
+  }
+  file {'drawio-download':                              # Directory for downloading drawio war files
+    ensure  => directory,
+    path    => $instance_download_dir,
+    purge   => true,                                    # remove un-used versions
+    require => Tomcat::Instance[$instance_name],        # Create file after Tomcat instance is installed
+    owner   => $::tomcat::user,
+    group   => $::tomcat::group,
   }
   # Install Tomcat
   tomcat::install { $catalina_home:
@@ -137,14 +147,18 @@ class drawio::install{
           ],
   }
 
-  # Install Drawio Package
-  tomcat::war { $instance_name:
-    catalina_base => $catalina_base,
-    war_source    => $drawio_download_url,
-    owner         => $::tomcat::user,
-    group         => $::tomcat::group,
-    require       => Tomcat::Instance[$instance_name],        # Create file after Tomcat instance is installed
+  # Download and extract drawio
 
+  archive { $instance_name:
+    ensure       => present,
+    source       => $drawio_download_url,
+    extract      => true,
+    extract_path => "${instance_download_dir}/${drawio_version}", # Target folder path to extract archive
+    creates      => "${instance_download_dir}/${drawio_version}",
+    cleanup      => true, # remove archive file after extraction
+    user         => $::tomcat::user,
+    group        => $::tomcat::group,
+    require      => File['drawio-download'],
   }
 
 }
