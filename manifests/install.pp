@@ -61,9 +61,9 @@ class drawio::install{
     ensure  => directory,
     path    => $instance_download_dir,
     purge   => true,                                    # remove un-used versions
-    require => Tomcat::Instance[$instance_name],        # Create file after Tomcat instance is installed
     owner   => $::tomcat::user,
     group   => $::tomcat::group,
+    require => Tomcat::Instance[$instance_name],        # Create file after Tomcat instance is installed
   }
   # Install Tomcat
   tomcat::install { $catalina_home:
@@ -150,8 +150,7 @@ class drawio::install{
   # Download and extract drawio
 
   archive { $instance_name:
-    ensure       => present,
-    path         => "${instance_download_dir}/${instance_name}-${drawio_version}.war",
+    path         => $instance_download_dir,
     source       => $drawio_download_url,
     extract      => true,
     extract_path => $instance_download_dir, # Target folder path to extract archive
