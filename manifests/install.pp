@@ -22,10 +22,11 @@ class drawio::install{
   $tomcat_server_port=$dw['tomcat']['server_port']
   $tomcat_temp_dir=$dw['tomcat']['temp_dir']
   # Drawio
-  $drawio_download_url=$dw['drawio']['download_url']
+  $drawio_version=$dw['drawio']['version']
+  $drawio_download_url="${dw['drawio']['download_url_base']}/v${drawio_version}/${dw['drawio']['package_name']}"
   # Tomcat Instance
-  $instance_name = $dw['instance']['name']    # Subdirectory name
-  $instance_base = $dw['instance']['base']    # Server instance location
+  $instance_name = $dw['instance']['name']    # Subdirectory name, ex: 'draw'
+  $instance_base = $dw['instance']['base']    # Server instance location, ex: '/var/tomcat'
   $instance_max_threads = $dw['instance']['max_threads']   # Thread size 
   $instance_temp_dir="${tomcat_temp_dir}/${instance_name}"
   # systemd unit file
@@ -37,7 +38,7 @@ class drawio::install{
 
   # Derived Values
   $catalina_home = "${tomcat_base}/${tomcat_version}"  # Tomcat binaries
-  $catalina_base = "${instance_base}/${instance_name}"   # Instance
+  $catalina_base = "${instance_base}/${instance_name}"   # Instance directory, example '/var/tomcat/draw'
   $class_path = "${catalina_home}/bin/bootstrap.jar:${catalina_home}/bin/tomcat-juli.jar"
 
   # Using Tomcat and Java Packages
@@ -137,9 +138,13 @@ class drawio::install{
   }
 
   # Install Drawio Package
-  tomcat::war { "${instance_name}.war":
+  tomcat::war { $instance_name:
     catalina_base => $catalina_base,
     war_source    => $drawio_download_url,
+    owner         => $::tomcat::user,
+    group         => $::tomcat::group,
+    require       => Tomcat::Instance[$instance_name],        # Create file after Tomcat instance is installed
+
   }
 
 }

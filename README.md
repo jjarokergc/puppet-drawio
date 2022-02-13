@@ -6,9 +6,9 @@ The development repository is located at: <https://gitlab.jaroker.org>.  A mirro
 
 ## Architecture
 
-The module depends on `puppetlabs-java` and `puppetlabs-tomcat` modules but implements its own systemd-based management of the tomcat instance which bypasses the Tomcat scripts (e.g. catalina.sh) in favor of directly running Tomcat in Java.
+The module depends on `puppetlabs-java` and `puppetlabs-tomcat` modules.  This module implements its own systemd-based management of the tomcat instance which bypasses the Tomcat scripts (e.g. catalina.sh) in favor of directly running Tomcat in Java.
 
-SSL offloading, caching and security (such as ModSecurity firewall) is provided by an Nginx reverse proxy (which is not part of this module).  This module implements only the proxied server.
+SSL offloading, caching and security (such as ModSecurity firewall) is provided by an Nginx reverse proxy to the drawio Tomcat instance via an HTTP connector.  The Nginx reverse proxy is not part of this module. 
 
 A yaml data file, in the form of Puppet hiera, is used for data lookup, which specifies source location (and version) for downloading, database configuration, nginx configuration and php setup.
 

@@ -49,7 +49,7 @@ class drawio::config {
         }
       ),
     notify  => Service[$service_name],
-    require => Tomcat::Instance[$instance_name],        # Create file after Tomcat instance is installed
+    require => Tomcat::War[$instance_name],        # Create file after WAR downloaded
   }
   file {$drawio_postconfig_file:
     ensure  => file,

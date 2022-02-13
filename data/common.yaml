@@ -36,7 +36,9 @@ drawio::install:
     server_port: '8100'
     temp_dir: '/tmp/tomcat'
   drawio:
-    download_url: "https://github.com/jgraph/drawio/releases/download/v16.5.3/draw.war"
+    version: '16.5.3'
+    package_name: 'draw.war'
+    download_url_base: "https://github.com/jgraph/drawio/releases/download"
   instance:
     name: 'draw'        # Subdirectory name
     base: '/var/tomcat' # Server instance location
