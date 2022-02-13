@@ -72,7 +72,7 @@ class drawio::config {
       ensure  => directory,
       owner   => $::tomcat::user,
       group   => $::tomcat::group,
-      require => File[$instance_dir,        # Create file after WAR downloaded
+      require => File[$instance_dir],        # Create file after WAR downloaded
     }
     file { "${aws_iot_dir}/mxPusherSrv.cert.pem":
       content => $cf['iot']['cert_pem'],
