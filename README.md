@@ -6,6 +6,8 @@ The development repository is located at: <https://gitlab.jaroker.org>.  A mirro
 
 ## Architecture
 
+![architecture](files/architecture.drawio.svg "Drawio Architecture")
+
 The module depends on `puppetlabs-java` and `puppetlabs-tomcat` modules.  This module implements its own systemd-based management of the tomcat instance which bypasses the Tomcat scripts (e.g. catalina.sh) in favor of directly running Tomcat in Java.
 
 SSL offloading, caching and security (such as ModSecurity firewall) is provided by an Nginx reverse proxy to the drawio Tomcat instance via an HTTP connector.  The Nginx reverse proxy is not part of this module.
