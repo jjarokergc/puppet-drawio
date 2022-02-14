@@ -60,7 +60,6 @@ class drawio::install{
   file {'drawio-download':                              # Directory for downloading drawio war files
     ensure  => directory,
     path    => $instance_download_dir,
-    purge   => true,                                    # remove un-used versions
     owner   => $::tomcat::user,
     group   => $::tomcat::group,
     require => Tomcat::Instance[$instance_name],        # Create file after Tomcat instance is installed
