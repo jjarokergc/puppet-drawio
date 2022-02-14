@@ -1,4 +1,4 @@
-<svg host="65bd71144e" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="466px" height="229px" viewBox="-0.5 -0.5 466 229" content="&lt;mxfile&gt;&lt;diagram id=&quot;4vGQD-txuXWfkFpLPoG-&quot; name=&quot;Page-1&quot;&gt;1Zffb5swEMf/Gl4rwCFNHvOj2SZtUrVM6rMDDlgzdmSOQvrX7xxMCDFpqzVruyfM1+fz+XNnYzyyyOsvmu6yHyphwgv9pPbI0gvDIBgTfBhl3yjTcNwIqeaJNeqENX9iVvStWvKEFT1DUEoA3/XFWEnJYuhpVGtV9c22SvRn3dGUOcI6psJVH3gCWaNOIr/TvzKeZu3MgW97ctoaW6HIaKKqE4nceWShlYKmldcLJgy8lkszbnWh9xiYZhJeNcDG8UhFaRf3S+UxBRse7Ns1VxkHtt7R2LxXmFePzDPIBb4F2KTFriG95TVD53NBN0zcq4IDVxL1GCNiGjsemQaOLL+fGYAyLqng6aD5zHZsFIDKscMGjt2svrj64MgUi5GpnIHeo4kdEPlRM8TWYXhrcVRdVoM2VdlpRluR2kpKj7472NiwvC+wDxz2S00rrlD7JgugElmfp0GrUiYG8NJHBi8k5RqIwj4i4ruIJgOEomsAihxADg+W4M60r1JJ1gfAZDIz+73rRGXFzYwHfo074+N5PDilKnXcWtkwgOqUwWkyXYyaCQr8se//TVBCB8pPhikusFb8e63q/dtq5n/Yt4T4/X07mtzcRq/culF4E10hDaNPWptkoDbD96pN4kBZcc0qaqzGAsOZbzS2Ujiu7wOPtmB8VkXTV5bQ+Bpn29hBJVMu6w+nQkZn38RocG9NB7iQa3C5dbjg/XHN4lJzMGE+zFafj9H0fRlNHEZbykW4ofLToSFkGE30j9BMHTR4pzpcqWY6NquPodTutQoXDGcX2pc+aDlPEjN8rlnBn+jm4MpA3iku4bCGaO5FS+OrBPxeHv5ijOsCtPrNFkoo3R3+Wzz5z6SrpKN/xo1GAzfcYKBO/+KCi6/dj8uh7+T3j9z9AQ==&lt;/diagram&gt;&lt;/mxfile&gt;">
+<svg host="65bd71144e" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="466px" height="229px" viewBox="-0.5 -0.5 466 229" content="&lt;mxfile&gt;&lt;diagram id=&quot;4vGQD-txuXWfkFpLPoG-&quot; name=&quot;Page-1&quot;&gt;1Zdbb5swFMc/Da8V4JDLYy7NNmmTqmVSnx1wwJqxI3MIpJ9+x8GEEKdttGZt94Lsv+3j4985vuCReV5/0XSb/VAJE17oJ7VHFl4YhuMQv0bYN8IkHDZCqnnSSEEnrPgTs6Jv1ZInrOh1BKUE8G1fjJWULIaeRrVWVb/bRon+rFuaMkdYxVS46iNPIGvUceR3+lfG06ydOfBtS07bzlYoMpqo6kQi9x6Za6WgKeX1nAnDruXSjFs+03p0TDMJVw2wfuyoKO3ifqk8pmDdg3275irjwFZbGpt6hWH1yCyDXGAtwCIttg3pDa8ZGp8JumbiQRUcuJKox+gR09iwYxo4svx+1gGUMUkFTy92n9qGtQJQOTZYx7GZ1c+uPjgyxVxkKmeg99jFDoj8qBli8zAcWRxVF9WgDVV2GtFWpDaT0qPtDjYWLO9n2AcO+4WmFVeofZMFUImsz8OgVSkTA3jhI4NXgnILRGEfEfFdROMLhKJbAIocQA4PluDOtFWpJOsDYDKZmv3eNaKy5GbGA7/GnLHxMh6cUpU6bntZN4DqlMFpMF2MmgkKfNe3/yYooQPlJ8MQF5gr/oNW9f5tOfM/7FtC/P6+HYzvRtGVWzcK76IbhGHwSXOTXMjN8L1ykzhQllyzippeQ4HuzNYaSykc1/eBR1swPMuiyZUpNLzF2TZ0UMmUy/rDqZDB2Z0YXdxbkwtcyC24jBwu+HxcsbjUHIybj9Pl52M0eV9GY4fRhnIRrqn8dGgIuYwm+kdoJg6a45tqqmOz/BhK7b6rcMVw9qJ97UbLeZKY4TPNCv5E1wdThvJWcQmHRUQzL1oYWyXghXn4jTGmC9DqN5sroXR3+m/w6D+TbnJV9uMxGFz5xP2LFy5Wuz+XQ9vJ7x+5/wM=&lt;/diagram&gt;&lt;/mxfile&gt;">
     <defs/>
     <g>
         <rect x="345" y="38" width="120" height="120" fill="rgb(255, 255, 255)" stroke="rgb(0, 0, 0)" pointer-events="all"/>
@@ -123,20 +123,20 @@
                 </text>
             </switch>
         </g>
-        <rect x="180" y="208" width="110" height="20" fill="none" stroke="none" pointer-events="all"/>
+        <rect x="175" y="208" width="120" height="20" fill="none" stroke="none" pointer-events="all"/>
         <g transform="translate(-0.5 -0.5)">
             <switch>
                 <foreignObject pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" style="overflow: visible; text-align: left;">
                     <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 1px; height: 1px; padding-top: 218px; margin-left: 235px;">
                         <div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: center;">
                             <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: all; white-space: nowrap;">
-                                Draio Architecture
+                                Drawio Architecture
                             </div>
                         </div>
                     </div>
                 </foreignObject>
                 <text x="235" y="222" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="12px" text-anchor="middle">
-                    Draio Architecture
+                    Drawio Architecture
                 </text>
             </switch>
         </g>
