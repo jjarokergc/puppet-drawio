@@ -38,7 +38,7 @@ drawio::configure:
     path: 'js/viewer.min.js' # Location inside url for viewer file
   editor_config: ''  # Parameter DRAWIO_CONFIG
   google: # Google drive application id and client id for the editor
-    client_id: ''
+    client_id: ''  # '0' - Disable, '' - Default , '[custom]'
     app_id:
     client_secret:
     viewer:
@@ -46,10 +46,10 @@ drawio::configure:
       app_id:
       client_secret:
   msgraph:
-    client_id: ''
+    client_id: '' # '0' - Disable, '' - Default , '[custom]'
     client_secret:
   gitlab:
-    id: ''
+    id: ''  # '0' - Disable, '' - Default , '[custom]'
     url: '' # Gitlab Auth URL
     secret: ''
   cloud_convert_apikey: ''
@@ -60,7 +60,7 @@ drawio::configure:
     root_ca: 
     mxpusher_endpoint:
     pusher_mode: 2
-  logging: 'true'
+  logging: 'false'
 #TODO - endpoint cache and real-time collaboration
 # - drawio_cache_domain=${drawio_cache_domain}
 # - DRAWIO_MEMCACHED_ENDPOINT=${DRAWIO_MEMCACHED_ENDPOINT}

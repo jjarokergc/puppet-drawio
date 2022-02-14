@@ -51,7 +51,9 @@
 
 // Google Drive 
 <% if $cf['google']['client_id'] == '' { -%>
-  urlParams['gapi'] = '0'; //Google Drive 
+  // Google drive - Using Default Settings
+<% } elsif $cf['google']['client_id'] == '0' { -%>
+  urlParams['gapi'] = '0'; //Google Drive Disabled
 <% } else { -%>
   // Google drive application id and client id for the editor
   window.DRAWIO_GOOGLE_APP_ID = '<%= $cf['google']['app_id'] %>'; 
@@ -65,7 +67,9 @@
 
 // Microsoft OneDrive
 <% if $cf['msgraph']['client_id'] == '' { -%>
-  urlParams['od'] = '0'; //OneDrive 
+  // Microsoft Access - Using Default Settings
+<% } elsif $cf['msgraph']['client_id'] == '0' { -%>
+  urlParams['od'] = '0'; //OneDrive Disabled
 <% } else { -%>
   // Google drive application id and client id for the editor
   window.DRAWIO_MSGRAPH_CLIENT_ID = '<%= $cf['msgraph']['client_id'] %>'; 
@@ -74,7 +78,9 @@
 
 // Gitlab
 <% if $cf['gitlab']['id'] == '' { -%>
-  urlParams['gl'] = '0'; //Gitlab
+  // Gitlab Access - Using Default Settings
+<% } elsif $cf['gitlab']['id'] == '0' { -%>
+  urlParams['gl'] = '0'; //Gitlab Disabled
 <% } else { -%>
   // Gitlab url and id for the editor
   window.DRAWIO_GITLAB_URL = '<%= $cf['gitlab']['url'] %>'; 
