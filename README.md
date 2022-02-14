@@ -8,15 +8,23 @@ The development repository is located at: <https://gitlab.jaroker.org>.  A mirro
 
 The module depends on `puppetlabs-java` and `puppetlabs-tomcat` modules.  This module implements its own systemd-based management of the tomcat instance which bypasses the Tomcat scripts (e.g. catalina.sh) in favor of directly running Tomcat in Java.
 
-SSL offloading, caching and security (such as ModSecurity firewall) is provided by an Nginx reverse proxy to the drawio Tomcat instance via an HTTP connector.  The Nginx reverse proxy is not part of this module. 
+SSL offloading, caching and security (such as ModSecurity firewall) is provided by an Nginx reverse proxy to the drawio Tomcat instance via an HTTP connector.  The Nginx reverse proxy is not part of this module.
 
 A yaml data file, in the form of Puppet hiera, is used for data lookup, which specifies source location (and version) for downloading, database configuration, nginx configuration and php setup.
 
  Tested Configuration
 
-* DrawIO 16.5.3
+* DrawIO 15.7.4, 16.5.3, 16.5.6
 * Tomcat 10.0.16
 * Java openjdk 11.0.13
+
+## Upgrading
+
+Upgrading is achieved through the yaml file located in either the user-specific `control_repo\data\nodes\[node-name].yaml` or the module-default file `data\common.yaml`.  
+
+Tomcat versions are changed using the configuration parameter `drawio::install[tomcat][version]`.  This will install the requested version and update various settings.
+
+Drawio versions are changed using the configuration parameter `drawio::install[drawio][version]`.  The requested version will be downloaded and unpacked.  The Tomcat instance will point to the new version and the various settings (such as pre- and post-configuration scripts) will be updated and the drawio systemd service restarted.
 
 ## Main Requirements
 
@@ -29,7 +37,7 @@ mod 'puppetlabs-java', '7.3.0'
 
 ## Usage Example
 
-An example profile such as `site/role/oss/draw_server.pp` below can be used to configure a server.  The `drawio::install` module is located in the manifests directory. 
+An example profile such as `site/role/oss/draw_server.pp` below can be used to configure a server.  The `drawio::install` module is located in the manifests directory.
 
 ``` puppet
 # Drawio Server
@@ -60,6 +68,8 @@ data/common.yaml
 lookup_options:
   drawio::install:
     merge: hash
+  drawio::configure:
+    merge: hash
 
 drawio::install:
   tomcat: 
@@ -69,14 +79,57 @@ drawio::install:
     server_port: '8100'
     temp_dir: '/tmp/tomcat'
   drawio:
-    download_url: "https://github.com/jgraph/drawio/releases/download/v16.5.3/draw.war"
+    version: '16.5.3'
+    package_name: 'draw.war'
+    download_url_base: "https://github.com/jgraph/drawio/releases/download"
   instance:
     name: 'draw'        # Subdirectory name
     base: '/var/tomcat' # Server instance location
     max_threads: '400'  # Thread size 
+
+drawio::configure:
+  plantuml_url: '' # Disabled if ''.  Example, 'http://plantuml-server:8080/'
+  export_url: '/export'  # Image Server Example, http://image-export:8000/
+  math_url: 'math'
+  csp_header: ''
+  viewer: # Either full 'url' if not empty; or, 'path' from drawio base url
+    url:  ''                 # Optional.  Either empty or https://example.com. Base_url used if empty.
+    path: 'js/viewer.min.js' # Location inside url for viewer file
+  lightbox: # Either full 'url' if not empty; or, 'path' from drawio base url
+    url:  ''                 # Optional.  Either empty or https://example.com. Base_url used if empty.
+    path: 'js/viewer.min.js' # Location inside url for viewer file
+  editor_config: ''  # Parameter DRAWIO_CONFIG
+  google: # Google drive application id and client id for the editor
+    client_id: ''
+    app_id:
+    client_secret:
+    viewer:
+      client_id: ''
+      app_id:
+      client_secret:
+  msgraph:
+    client_id: ''
+    client_secret:
+  gitlab:
+    id: ''
+    url: '' # Gitlab Auth URL
+    secret: ''
+  cloud_convert_apikey: ''
+  iot:
+    endpoint: '' # Either null or URL for endpoint
+    cert_pem: 
+    private_key:
+    root_ca: 
+    mxpusher_endpoint:
+    pusher_mode: 2
+  logging: 'true'
+#TODO - endpoint cache and real-time collaboration
+# - drawio_cache_domain=${drawio_cache_domain}
+# - DRAWIO_MEMCACHED_ENDPOINT=${DRAWIO_MEMCACHED_ENDPOINT}
 ```
 
 data/Debian-family.yaml
+
 ```yaml
 # Draio Module-level defaults
 ---
