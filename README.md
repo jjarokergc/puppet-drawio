@@ -47,12 +47,16 @@ An example profile such as `site/role/oss/draw_server.pp` below can be used to c
 class role::app::draw_server{
   include profile::base_configuration
 
-  # Diagrams.Net drawio utility
-  include drawio::install   # Creates drawio instance
-  include drawio::config    # Installs pre- and post-config files and integrations
+  # Required Packages
+  include ::tomcat
+  include ::java
 
-  # Publicly available behind a reverse proxy
-  include profile::nginx::reverse_proxy_export
+  # Diagrams.Net drawio utility
+  include drawio::install
+  include drawio::config
+
+  # Publically available behind a reverse proxy
+   include profile::nginx::reverse_proxy_export
 
 }
 ```

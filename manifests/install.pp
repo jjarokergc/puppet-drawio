@@ -1,7 +1,7 @@
 # Install and Configure Diagrams.Net drawio
 #
 #   Parameters defined in yaml data file
-#   Installs Tomcat and Java
+#   Requires Tomcat and Java
 #   Creates DrawIO instance on non-privileged port
 #   Creates custom systemd unit file
 #   Manages drawio as systemd service
@@ -43,9 +43,6 @@ class drawio::install{
   $instance_download_dir = "${catalina_base}/download"    # /var/tomcat/draw/download
   $class_path = "${catalina_home}/bin/bootstrap.jar:${catalina_home}/bin/tomcat-juli.jar"
 
-  # Using Tomcat and Java Packages
-  class { '::tomcat': }
-  class { '::java':   }
   # Prepare Sub Directories
   file{ [
           $tomcat_base,
