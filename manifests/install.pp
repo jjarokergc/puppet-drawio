@@ -125,9 +125,10 @@ class drawio::install{
           'class_path'        => $class_path
         }
       ),
-    notify  => Exec['systemctl daemon-reload'],
+    notify  => Exec['drawio systemctl daemon-reload'],
   }
-  exec {'systemctl daemon-reload':
+  exec {'drawio systemctl daemon-reload':
+    command     => 'systemctl daemon-reload',
     refreshonly => true,
     path        =>['/bin'],
     notify      => Service[$service_name],
