@@ -45,7 +45,7 @@ An example profile such as `site/role/oss/draw_server.pp` below can be used to c
 # Drawio Server
 #
 class role::app::draw_server{
-  include profile::base_configuration
+  include profile::base::common
 
   # Required Packages
   include ::tomcat
